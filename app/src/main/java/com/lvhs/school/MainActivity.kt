@@ -36,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             loadTab(R.id.nav_home)
             handleDeepLink(intent)
+
+            // Check for app updates
+            UpdateChecker(this).check()
         }
     }
 

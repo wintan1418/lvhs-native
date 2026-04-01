@@ -19,6 +19,7 @@ class WebViewFragment : Fragment() {
 
     private var webView: WebView? = null
     private var swipeRefresh: SwipeRefreshLayout? = null
+    private var loadingOverlay: android.view.View? = null
     private var currentUrl: String = ""
 
     override fun onCreateView(
@@ -34,6 +35,7 @@ class WebViewFragment : Fragment() {
 
         webView = view.findViewById(R.id.turbo_web_view)
         swipeRefresh = view.findViewById(R.id.swipe_refresh)
+        loadingOverlay = view.findViewById(R.id.loading_overlay)
         currentUrl = arguments?.getString(ARG_URL)
             ?: "${BuildConfig.BASE_URL}/"
 
@@ -76,6 +78,19 @@ class WebViewFragment : Fragment() {
                     swipeRefresh?.isRefreshing = false
                     CookieManager.getInstance().flush()
                     url?.let { currentUrl = it }
+
+                    // Fade out loading overlay
+                    loadingOverlay?.let { overlay ->
+                        if (overlay.visibility == android.view.View.VISIBLE) {
+                            overlay.animate()
+                                .alpha(0f)
+                                .setDuration(400)
+                                .withEndAction {
+                                    overlay.visibility = android.view.View.GONE
+                                }
+                                .start()
+                        }
+                    }
                 }
             }
 
